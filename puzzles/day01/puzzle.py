@@ -17,4 +17,6 @@ class P(Puzzle):
     
     def _part2(self, input_data):
         
-        pass
+        for pair in itertools.combinations(input_data, 3):
+            if sum(pair) == 2020:
+                return pair[0] * pair[1] * pair[2]
