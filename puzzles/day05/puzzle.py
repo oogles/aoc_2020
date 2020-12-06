@@ -30,4 +30,13 @@ class P(Puzzle):
     
     def _part2(self, input_data):
         
-        pass
+        last_id = 0
+        for seat_id in sorted(input_data):
+            # Detect a missing sequential ID, not including the first in the list
+            if seat_id != last_id + 1 and last_id != 0:
+                last_id += 1
+                break
+            
+            last_id = seat_id
+        
+        return last_id
