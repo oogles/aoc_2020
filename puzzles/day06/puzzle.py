@@ -20,4 +20,13 @@ class P(Puzzle):
     
     def _part2(self, input_data):
         
-        pass
+        total = 0
+        for group_answers in input_data:
+            num_people = len(group_answers)
+            all_answers = ''.join(group_answers)
+            
+            for answer in set(all_answers):
+                if all_answers.count(answer) == num_people:
+                    total += 1
+        
+        return total
