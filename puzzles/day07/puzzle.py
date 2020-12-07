@@ -53,4 +53,10 @@ class P(Puzzle):
     
     def _part2(self, input_data):
         
-        pass
+        def count_bags(bags):
+            
+            # For each inner bag, count the number of that type of bag and all
+            # the bags within each one
+            return sum([n + (count_bags(input_data[c]) * n) for c, n in bags.items()])
+        
+        return count_bags(input_data['shiny gold'])
