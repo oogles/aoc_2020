@@ -48,8 +48,6 @@ class P(Puzzle):
                 y -= value
             elif move_direction == 'W':
                 x -= value
-            
-            print(x, y)
         
         return abs(x) + abs(y)
     
