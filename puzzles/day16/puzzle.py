@@ -52,4 +52,52 @@ class P(Puzzle):
     
     def _part2(self, input_data):
         
-        pass
+        rules = self.rules
+        
+        def find_matching_fields(value):
+            
+            matches = []
+            
+            for rule_name, rule_ranges in rules.items():
+                for rule_range in rule_ranges:
+                    if rule_range[0] <= value <= rule_range[1]:
+                        matches.append(rule_name)
+            
+            return matches
+        
+        # All field positions start corresponding to potentially any field
+        rule_names = set(rules.keys())
+        field_possibilities = {i: rule_names.copy() for i in range(len(rules))}
+        
+        # Narrow each position down to a subset of possible fields using nearby tickets
+        for ticket in input_data:
+            ticket_fields = {}
+            
+            for i, field_value in enumerate(ticket):
+                matching_fields = find_matching_fields(field_value)
+                if not matching_fields:
+                    break
+                else:
+                    ticket_fields[i] = matching_fields
+            else:
+                # All fields in the ticket were valid
+                for i, fields in ticket_fields.items():
+                    field_possibilities[i] = field_possibilities[i].intersection(fields)
+        
+        # Finally, use the confirmed fields (where there is only a single
+        # possibility) to clarify any remaining unconfirmed fields
+        known_fields = {}
+        while field_possibilities:
+            for i, fields in field_possibilities.copy().items():
+                fields = fields.difference(known_fields.values())
+                if len(fields) == 1:
+                    known_fields[i] = fields.pop()
+                    del field_possibilities[i]
+        
+        # Multiply together "departure*" fields from own ticket
+        result = 1
+        for i, field in known_fields.items():
+            if field.startswith('departure'):
+                result *= self.own_ticket[i]
+        
+        return result
